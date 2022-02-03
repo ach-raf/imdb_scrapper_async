@@ -1,13 +1,13 @@
 import os
-import re
-import numpy as np
 import pickle as pkl
-
+import re
 
 MAX_CHUNK_LENGHT = 100  # lenght of the chunk
 CURRENT_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-ID_DUMP_PATH = os.path.join(CURRENT_DIR_PATH, 'ids_dump')
-ID_DUMP_NAME = os.path.join(CURRENT_DIR_PATH, 'ids_dump', 'imdb_ids_dump')
+ROOT_DIRECTORY = os.path.normpath(CURRENT_DIR_PATH + os.sep + os.pardir)
+IMDB_DATA_PATH = os.path.join(ROOT_DIRECTORY, 'data', 'data.tsv')
+ID_DUMP_PATH = os.path.join(ROOT_DIRECTORY, 'data' ,'ids_dump')
+ID_DUMP_NAME = os.path.join(ROOT_DIRECTORY, 'data' ,'ids_dump', 'imdb_ids_dump')
 os.makedirs(os.path.dirname(ID_DUMP_NAME), exist_ok=True)
 
 
@@ -46,9 +46,9 @@ def get_imdb_id(_string):
     return re.search('([^\s]+)', _string).group(0)
 
 
-def get_imdb_ids_dump_path() -> list:
+def get_imdb_urls_dump_path() -> list:
     imdb_base_path = 'https://www.imdb.com/title/'
-    _imdb_data_path = os.path.join(CURRENT_DIR_PATH, 'data.tsv')
+    
     _dumps_path_index = []
     _print_flag = True
     for _file in os.listdir(ID_DUMP_PATH):
@@ -63,13 +63,13 @@ def get_imdb_ids_dump_path() -> list:
         return get_dump_path(_dumps_path_index)
 
     print('imdb_ids_dump not found, please wait.')
-    with open(_imdb_data_path, 'r', encoding='utf') as file:
+    with open(IMDB_DATA_PATH, 'r', encoding='utf') as file:
         # ignore first line in data.tsf
         _first_line = file.readline()
         _lines = file.readlines()
 
-    _imdb_id_list = np.array(
-        [f"{imdb_base_path}{get_imdb_id(_line)}" for _line in _lines])
+    _imdb_id_list = [
+        f"{imdb_base_path}{get_imdb_id(_line)}" for _line in _lines]
 
     _dumps_path_index = write_imdb_id(_imdb_id_list)
     print('imdb_ids_dump was created successfully.')
