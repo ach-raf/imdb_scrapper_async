@@ -1,6 +1,0 @@
-fastapi
-databases
-Jinja2
-python-multipart
-uvicorn
-aiosqlite

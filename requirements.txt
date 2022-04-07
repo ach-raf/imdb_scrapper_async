@@ -1,3 +1,0 @@
-aiohttp
-BeautifulSoup4
-lxml
